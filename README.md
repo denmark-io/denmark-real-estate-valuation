@@ -1,26 +1,26 @@
-#denmark-realestate-evaluation
+#denmark-real-estate-valuation
 
-> A stream of realestate evaluations given a zipcode and streetname
+> A stream of real estate valuations given a zipcode and streetname
 
 ## Installation
 
 ```sheel
-npm install denmark-realestate-evaluation
+npm install denmark-real-estate-valuation
 ```
 
 ## Documentation
 
 ```javascript
-RealestateEvaluation = require('denmark-realestate-evaluation')
+RealEstateValuation = require('denmark-real-estate-valuation')
 ```
 
 This is a class constructor with the signature
-`RealestateEvaluation(zipcode, steetname)`, it returns a readable stream.
+`RealEstateValuation(zipcode, steetname)`, it returns a readable stream.
 
 
 ```javascript
-const evaluations = RealestateEvaluation(2800, 'Lyngby Hovedgade');
-evaluations.on('data', function (property) {
+const valuations = RealEstateValuation(2800, 'Lyngby Hovedgade');
+valuations.on('data', function (property) {
   property = {
     id: 51002,
     houseNumber: '1A',

@@ -4,7 +4,7 @@
 
 const test = require('tap').test;
 const endpoint = require('endpoint');
-const RealestatEvaluation = require('./index.js');
+const RealEstatValuation = require('./index.js');
 
 function isNumber(val) {
   // Some of the values may be NaN
@@ -16,7 +16,7 @@ function isString(val) {
 }
 
 test('correct zipcode and street name', function (t) {
-  new RealestatEvaluation(2800, 'Lyngby Hovedgade')
+  new RealEstatValuation(2800, 'Lyngby Hovedgade')
     .pipe(endpoint({objectMode: true}, function (err, evaluations) {
       t.ifError(err);
       t.ok(evaluations.length > 0);
@@ -33,7 +33,7 @@ test('correct zipcode and street name', function (t) {
 });
 
 test('incorrect zipcode', function (t) {
-  new RealestatEvaluation(1, 'Lyngby Hovedgade')
+  new RealEstatValuation(1, 'Lyngby Hovedgade')
     .pipe(endpoint({objectMode: true}, function (err, evaluations) {
       t.equal(err.name, 'Error');
       t.equal(err.message, 'Fejl i POSTNR, indtast korrekt 4-cifret postnummer');
@@ -43,9 +43,8 @@ test('incorrect zipcode', function (t) {
 });
 
 test('incorrect streetname', function (t) {
-  new RealestatEvaluation(2800, 'WRONG')
+  new RealEstatValuation(2800, 'WRONG')
     .pipe(endpoint({objectMode: true}, function (err, evaluations) {
-      console.log(err);
       t.equal(err.name, 'Error');
       t.equal(err.message, 'Vælg et vejnavn fra listen over vejnavne');
       t.equal(evaluations.length, 0);

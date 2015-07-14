@@ -1,6 +1,6 @@
 {
-  "name": "denmark-realestate-evaluation",
-  "description": "A stream of realestate evaluations given a zipcode and streetname",
+  "name": "denmark-real-estate-valuation",
+  "description": "A stream of reale state valuations given a zipcode and streetname",
   "version": "1.0.0",
   "author": "Andreas Madsen <amwebdk@gmail.com>",
   "scripts": {
@@ -9,7 +9,7 @@
   "main": "./index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/AndreasMadsen/denmark-realestate-evaluation.git"
+    "url": "git://github.com/AndreasMadsen/denmark-real-estate-valuation.git"
   },
   "keywords": [
     "denmark",

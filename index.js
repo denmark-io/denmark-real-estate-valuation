@@ -10,9 +10,9 @@ const stream = require('stream');
 const cheerio = require('cheerio');
 const endpoint = require('endpoint');
 
-function RealestatEvaluation(zipcode, streetname) {
-  if (!(this instanceof RealestatEvaluation)) {
-    return new RealestatEvaluation(zipcode, streetname);
+function RealEstatValuation(zipcode, streetname) {
+  if (!(this instanceof RealEstatValuation)) {
+    return new RealEstatValuation(zipcode, streetname);
   }
   stream.Readable.call(this, { objectMode: true, highWaterMark: 1 });
 
@@ -22,10 +22,10 @@ function RealestatEvaluation(zipcode, streetname) {
 
   this._nextHref = this._initHref();
 }
-util.inherits(RealestatEvaluation, stream.Readable);
-module.exports = RealestatEvaluation;
+util.inherits(RealEstatValuation, stream.Readable);
+module.exports = RealEstatValuation;
 
-RealestatEvaluation.prototype._initHref = function () {
+RealEstatValuation.prototype._initHref = function () {
   // Builds the first url, the next urls are scraped from the "next page"
   // button.
   const params = {
@@ -50,7 +50,7 @@ RealestatEvaluation.prototype._initHref = function () {
   return href;
 };
 
-RealestatEvaluation.prototype._makeRequest = function (href, callback) {
+RealEstatValuation.prototype._makeRequest = function (href, callback) {
   const req = http.get(href, function (res) {
     res
       .once('error', callback)
@@ -70,7 +70,7 @@ function arrayfrom(iterable) {
   return a;
 }
 
-RealestatEvaluation.prototype._parseHTML = function (content) {
+RealEstatValuation.prototype._parseHTML = function (content) {
   const self = this;
   // Parse content
   const $ = cheerio.load(content.toString());
@@ -116,7 +116,7 @@ function parseEvaluation(val) {
   return parseInt(val.replace(/\./g, ''), 10);
 }
 
-RealestatEvaluation.prototype._parseRow = function (row) {
+RealEstatValuation.prototype._parseRow = function (row) {
   return {
     id: parseInt(row[0], 10),
     houseNumber: row[1],
@@ -128,7 +128,7 @@ RealestatEvaluation.prototype._parseRow = function (row) {
   };
 };
 
-RealestatEvaluation.prototype._read = function () {
+RealEstatValuation.prototype._read = function () {
   const self = this;
 
   // NOTE: For some reason you can't really have multiply .push in an
