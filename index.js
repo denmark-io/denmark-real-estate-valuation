@@ -10,14 +10,22 @@ const stream = require('stream');
 const cheerio = require('cheerio');
 const endpoint = require('endpoint');
 
-function RealEstatValuation(zipcode, streetname) {
+function RealEstatValuation(query) {
   if (!(this instanceof RealEstatValuation)) {
-    return new RealEstatValuation(zipcode, streetname);
+    return new RealEstatValuation(query);
   }
   stream.Readable.call(this, { objectMode: true, highWaterMark: 1 });
 
-  this._zipcode = zipcode;
-  this._streetname = streetname;
+  if (!(query.zipCode || query.municipalityCode)) {
+    throw new TypeError('either zipcode or the municipality code should be set');
+  }
+  if (!query.streetName) {
+    throw new TypeError('the steet name should be set');
+  }
+
+  this._zipCode = query.zipCode || null;
+  this._municipalityCode = query.municipalityCode || null;
+  this._streetName = query.streetName;
   this._buffer = [];
 
   this._nextHref = this._initHref();
@@ -29,15 +37,22 @@ RealEstatValuation.prototype._initHref = function () {
   // Builds the first url, the next urls are scraped from the "next page"
   // button.
   const params = {
-    'sideNavn': 'vstartp',
+    'sideNavn': '',
     'VEJKODE': '',
-    'POSTNR': this._zipcode,
-    'VEJNAVN': this._streetname,
+    'VEJNAVN': this._streetName,
     'HUSNR': '',
     'BOGSTAV': '',
     'ETAGE': '',
     'SIDE': ''
   };
+
+  if (this._zipCode) {
+    params.sideNavn = 'vstartp';
+    params.POSTNR = this._zipCode;
+  } else if (this._municipalityCode) {
+    params.sideNavn = 'vstartv';
+    params.KMNR = this._municipalityCode;
+  }
 
   const href = url.format({
     protocol: 'http',

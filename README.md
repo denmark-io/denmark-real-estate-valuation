@@ -14,12 +14,20 @@ npm install denmark-real-estate-valuation
 RealEstateValuation = require('denmark-real-estate-valuation')
 ```
 
-This is a class constructor with the signature
-`RealEstateValuation(zipcode, steetname)`, it returns a readable stream.
+This is a class constructor with the signature `RealEstateValuation(query)`,
+it returns a readable stream.
 
+query is an object that could specify the area (either `zipCode` or `municipalityCode`)
+and the street name (`streetName`).
 
 ```javascript
-const valuations = RealEstateValuation(2800, 'Lyngby Hovedgade');
+const valuations = RealEstateValuation({
+  zipCode: 2800,
+  streetName: 'Lyngby Hovedgade'
+});
+
+// alternatively: { municipalityCode: 173, streetName: 'Lyngby Hovedgade' }
+
 valuations.on('data', function (property) {
   property = {
     id: 51002,
