@@ -1,4 +1,4 @@
-#denmark-real-estate-valuation
+#denmark-real-estate-valuation [![Build Status](https://travis-ci.org/denmark-io/denmark-real-estate-valuation.svg?branch=master)](https://travis-ci.org/denmark-io/denmark-real-estate-valuation)
 
 > A stream of real estate valuations given a zipcode and streetname
 
