@@ -81,7 +81,7 @@ RealEstatValuation.prototype._makeRequest = function (href, callback) {
 
 function arrayfrom(iterable) {
   const a = [];
-  for (const i = 0; i < iterable.length; i++) a.push(iterable[i]);
+  for (let i = 0; i < iterable.length; i++) a.push(iterable[i]);
   return a;
 }
 
