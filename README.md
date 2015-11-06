@@ -18,7 +18,8 @@ This is a class constructor with the signature `RealEstateValuation(query)`,
 it returns a readable stream.
 
 query is an object that could specify the area (either `zipCode` or `municipalityCode`)
-and the street name (`streetName`).
+and the street name (`streetName`). If the `municipalityCode` is used
+a street code (`streetCode`) can be used instead of street name.
 
 ```javascript
 const valuations = RealEstateValuation({
@@ -27,6 +28,7 @@ const valuations = RealEstateValuation({
 });
 
 // alternatively: { municipalityCode: 173, streetName: 'Lyngby Hovedgade' }
+// alternatively: { municipalityCode: 173, streetCode: 535 }
 
 valuations.on('data', function (property) {
   property = {

@@ -19,39 +19,48 @@ function RealEstatValuation(query) {
   if (!(query.zipCode || query.municipalityCode)) {
     throw new TypeError('either zipcode or the municipality code should be set');
   }
-  if (!query.streetName) {
-    throw new TypeError('the steet name should be set');
+  if (!(query.streetName || (query.municipalityCode && query.streetCode))) {
+    throw new TypeError('the steet name or code should be set');
   }
 
-  this._zipCode = query.zipCode || null;
-  this._municipalityCode = query.municipalityCode || null;
-  this._streetName = query.streetName;
   this._buffer = [];
-
-  this._nextHref = this._initHref();
+  this._nextHref = this._initHref(query);
 }
 util.inherits(RealEstatValuation, stream.Readable);
 module.exports = RealEstatValuation;
 
-RealEstatValuation.prototype._initHref = function () {
+function prefix(number, length) {
+  const str = number.toString();
+  return '0'.repeat(length - str.length) + str;
+}
+
+RealEstatValuation.prototype._initHref = function (query) {
   // Builds the first url, the next urls are scraped from the "next page"
   // button.
   const params = {
     'sideNavn': '',
     'VEJKODE': '',
-    'VEJNAVN': this._streetName,
+    'VEJNAVN': '',
     'HUSNR': '',
     'BOGSTAV': '',
     'ETAGE': '',
     'SIDE': ''
   };
 
-  if (this._zipCode) {
-    params.sideNavn = 'vstartp';
-    params.POSTNR = this._zipCode;
-  } else if (this._municipalityCode) {
-    params.sideNavn = 'vstartv';
-    params.KMNR = this._municipalityCode;
+
+  if (query.streetName) {
+    params.VEJNAVN = query.streetName;
+  } else {
+    params.VEJKODE = prefix(query.streetCode, 4);
+    params.sideNavn = 'vvej';
+  }
+
+  if (query.zipCode) {
+    params.POSTNR = query.zipCode;
+    if (query.streetName) params.sideNavn = 'vstartp';
+  } else if (query.municipalityCode) {
+    params.KMNR = query.municipalityCode;
+    if (query.streetName) params.sideNavn = 'vstartv';
   }
 
   const href = url.format({
@@ -87,6 +96,7 @@ function arrayfrom(iterable) {
 
 RealEstatValuation.prototype._parseHTML = function (content) {
   const self = this;
+
   // Parse content
   const $ = cheerio.load(content.toString());
 
@@ -95,6 +105,15 @@ RealEstatValuation.prototype._parseHTML = function (content) {
   if (errorElem.length) {
     return {
       error: new Error(errorElem.text().trim()),
+      evaluations: [],
+      next: null
+    };
+  }
+
+  const img = $('img[src="/images/svur/vis10eft.gif"]');
+  if (img.length === 0) {
+    return {
+      error: new Error('unknown error'),
       evaluations: [],
       next: null
     };
@@ -112,7 +131,6 @@ RealEstatValuation.prototype._parseHTML = function (content) {
   }));
 
   // Get url for next page
-  const img = $('img[src="/images/svur/vis10eft.gif"]');
   let next = null;
   if (img[0].attribs.alt !== 'Ikke flere ejendomme på vejen') {
     next = img.parent()[0].attribs.href;
