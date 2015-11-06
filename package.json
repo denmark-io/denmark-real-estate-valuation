@@ -1,7 +1,7 @@
 {
   "name": "denmark-real-estate-valuation",
   "description": "A stream of reale state valuations given a zipcode and streetname",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "Andreas Madsen <amwebdk@gmail.com>",
   "scripts": {
     "test": "tap -R=tap -t=60 test.js"
